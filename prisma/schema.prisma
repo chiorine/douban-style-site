@@ -1,0 +1,39 @@
+// Prisma schema — SQLite 版本
+// 文档：https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── 广播（短内容，类似即刻 / 推文）───────────────────────────
+model Broadcast {
+  id          Int      @id @default(autoincrement())
+  nickname    String
+  avatar      String
+  content     String
+  publishedAt String
+  tags        String   // JSON 数组序列化为字符串，读取时用 JSON.parse()，写入时用 JSON.stringify()
+  status      String   @default("published") // "draft" | "published"，老数据默认 published
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── 笔记（长文，类似博客文章）──────────────────────────────
+model Note {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  summary     String?  // 可选摘要
+  content     String   // 段落数组序列化为 JSON 字符串，读取时用 JSON.parse()
+  tags        String   // 同 Broadcast.tags，JSON 数组字符串
+  status      String   @default("published") // "draft" | "published"
+  date        String   // 前台展示日期，格式如 2025-03-15
+  readingTime String   // 前台展示阅读时间，如 "4 分钟"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
