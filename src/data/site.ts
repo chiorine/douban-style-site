@@ -13,7 +13,10 @@ export const siteSubtitle = "记录广播、日记、项目与生活";
 export const siteDescription =
   "Wewkee——一处缓慢更新的个人角落，记录阅读、写作、项目与日常想法。不赶时间，不追热点。";
 
-/** 首页欢迎区块副标题 */
+/** 首页欢迎区块副标题（保留用于 SEO meta 等其他引用场景）
+ * 注意：首页 Hero 模块的展示内容已迁移到后台可编辑 JSON：
+ * src/data/content/home-hero.json（通过 /admin/home-hero 管理）
+ */
 export const siteTagline = "你好，欢迎来到 Wewkee。";
 
 // ────────────────────────────────────────────────────────────

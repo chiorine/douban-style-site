@@ -4,8 +4,6 @@ import Link from "next/link";
 import { archives } from "@/data/archive";
 import { prisma } from "@/lib/prisma";
 import {
-  siteTagline,
-  siteDescription,
   nickname,
   avatar,
   bio,
@@ -14,8 +12,11 @@ import {
   links,
   tags,
 } from "@/data/site";
+import { getHomeHero } from "@/lib/home-hero";
 
 export default async function HomePage() {
+  // 从 JSON 文件读取首页 Hero 配置（出错时自动降级到默认值）
+  const homeHero = getHomeHero();
     const rows = await prisma.broadcast.findMany({
     where: { status: "published" },
     orderBy: { createdAt: "desc" },
@@ -54,17 +55,39 @@ export default async function HomePage() {
       <div className="mx-auto w-full max-w-[1100px] px-4 py-8 md:py-10">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,720px)_300px]">
           <section className="space-y-6">
-            <section className="rounded-md border border-stone-200 bg-white px-6 py-8">
-              <p className="text-sm uppercase tracking-[0.2em] text-stone-500">
-                Welcome
-              </p>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-stone-800">
-                {siteTagline}
-              </h1>
-              <p className="mt-4 max-w-2xl text-[15px] leading-8 text-stone-600">
-                {siteDescription}
-              </p>
-            </section>
+                        {homeHero.enabled && (
+              <section className="rounded-md border border-stone-200 bg-white px-6 py-8">
+                <p className="text-sm uppercase tracking-[0.2em] text-stone-500">
+                  {homeHero.eyebrow}
+                </p>
+                <h1 className="mt-3 text-3xl font-semibold tracking-tight text-stone-800">
+                  {homeHero.title}
+                </h1>
+                <p className="mt-4 max-w-2xl text-[15px] leading-8 text-stone-600">
+                  {homeHero.description}
+                </p>
+                {(homeHero.primaryAction || homeHero.secondaryAction) && (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {homeHero.primaryAction && (
+                      <Link
+                        href={homeHero.primaryAction.href}
+                        className="inline-flex items-center rounded-sm bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-800"
+                      >
+                        {homeHero.primaryAction.label}
+                      </Link>
+                    )}
+                    {homeHero.secondaryAction && (
+                      <Link
+                        href={homeHero.secondaryAction.href}
+                        className="inline-flex items-center rounded-sm border border-stone-200 bg-stone-50 px-4 py-2 text-sm font-medium text-stone-600 transition hover:text-emerald-700"
+                      >
+                        {homeHero.secondaryAction.label}
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </section>
+            )}
 
             <section className="rounded-md border border-stone-200 bg-white">
               <div className="flex items-center justify-between border-b border-stone-200 px-6 py-4">
