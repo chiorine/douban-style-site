@@ -3,7 +3,9 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import SidebarCard from "@/components/layout/SidebarCard";
 import NotesFilter from "@/components/notes/NotesFilter";
+import TagList from "@/components/common/TagList";
 import { prisma } from "@/lib/prisma";
+import { getTagCountsFromItems } from "@/lib/tags";
 import type { NoteForPage } from "@/types/note";
 
 type SearchParams = { tag?: string };
@@ -28,10 +30,13 @@ export default async function NotesPage({
     content: JSON.parse(row.content) as string[],
   }));
 
-  // URL tag 参数预筛选；NotesFilter 内部还可以继续按月份 / 标签二次筛选
+    // URL tag 参数预筛选；NotesFilter 内部还可以继续按月份 / 标签二次筛选
   const filteredNotes = tag
     ? allNotes.filter((n) => n.tags.includes(tag))
     : allNotes;
+
+  // 注意：边栏标签统计始终基于全部已发布日记（不随筛选变化）
+  const notesTagCounts = getTagCountsFromItems(allNotes);
 
   return (
     <main className="min-h-screen bg-stone-100 text-stone-800">
@@ -66,10 +71,33 @@ export default async function NotesPage({
               </div>
             )}
 
-            <NotesFilter items={filteredNotes} />
+            {tag && filteredNotes.length === 0 ? (
+              <div className="rounded-md border border-stone-200 bg-white px-6 py-10 text-center">
+                <p className="text-sm text-stone-500">
+                  没有找到标签为 <span className="font-medium text-stone-700">#{tag}</span> 的日记。
+                </p>
+                <p className="mt-2 text-sm text-stone-400">
+                  你可以尝试其他标签，或者{""}  
+                  <Link href="/notes" className="ml-1 text-emerald-700 hover:underline">
+                    清除当前筛选
+                  </Link>
+                  。
+                </p>
+              </div>
+            ) : (
+              <NotesFilter items={filteredNotes} />
+            )}
           </section>
 
-          <aside className="space-y-6">
+                    <aside className="space-y-6">
+            <SidebarCard title="标签">
+              <TagList
+                tags={notesTagCounts}
+                basePath="/notes"
+                activeTag={tag}
+              />
+            </SidebarCard>
+
             <SidebarCard title="关于这个页面">
               <p className="text-sm leading-7 text-stone-600">
                 这里收的是比广播稍长一点的文字。它们不一定完整，也不一定重要，

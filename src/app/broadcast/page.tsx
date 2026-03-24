@@ -3,7 +3,9 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import SidebarCard from "@/components/layout/SidebarCard";
 import BroadcastFilter from "@/components/broadcast/BroadcastFilter";
+import TagList from "@/components/common/TagList";
 import { prisma } from "@/lib/prisma";
+import { getTagCountsFromItems } from "@/lib/tags";
 
 type SearchParams = {
   tag?: string;
@@ -22,7 +24,7 @@ export default async function BroadcastPage({
     orderBy: { createdAt: "desc" },
   });
 
-  // tags 在数据库中存储为 JSON 字符串，转换为组件期望的 string[]
+    // tags 在数据库中存储为 JSON 字符串，转换为组件期望的 string[]
   const broadcasts = rows.map((row) => ({
     ...row,
     id: String(row.id),
@@ -35,6 +37,9 @@ export default async function BroadcastPage({
     if (month && !item.publishedAt.startsWith(month)) return false;
     return true;
   });
+
+  // 边栏标签统计：始终基于全部已发布广播
+  const broadcastTagCounts = getTagCountsFromItems(broadcasts);
 
   return (
     <main className="min-h-screen bg-stone-100 text-stone-800">
@@ -94,7 +99,15 @@ export default async function BroadcastPage({
             )}
           </section>
 
-          <aside className="space-y-6">
+                    <aside className="space-y-6">
+            <SidebarCard title="标签">
+              <TagList
+                tags={broadcastTagCounts}
+                basePath="/broadcast"
+                activeTag={tag}
+              />
+            </SidebarCard>
+
             <SidebarCard title="关于广播">
               <p className="text-sm leading-7 text-stone-600">
                 和日记相比，广播更轻一些，也更碎一些。它不一定完整，

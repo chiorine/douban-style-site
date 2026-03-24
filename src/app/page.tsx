@@ -10,8 +10,9 @@ import {
   location,
   website,
   links,
-  tags,
 } from "@/data/site";
+import { getTagCountsFromItems, mergeTagCounts } from "@/lib/tags";
+import TagList from "@/components/common/TagList";
 import { getHomeHero } from "@/lib/home-hero";
 
 export default async function HomePage() {
@@ -23,7 +24,7 @@ export default async function HomePage() {
     take: 3,
   });
 
-  // 最近日记：数据库读取，只取已发布
+    // 最近日记：数据库读取，只取已发布
   const noteRows = await prisma.note.findMany({
     where: { status: "published" },
     orderBy: { createdAt: "desc" },
@@ -37,6 +38,23 @@ export default async function HomePage() {
     readingTime: row.readingTime,
     tags: JSON.parse(row.tags) as string[],
   }));
+
+  // 全站标签统计：notes + broadcasts 合并
+  const allNoteRowsForTags = await prisma.note.findMany({
+    where: { status: "published" },
+    select: { tags: true },
+  });
+  const allBroadcastRowsForTags = await prisma.broadcast.findMany({
+    where: { status: "published" },
+    select: { tags: true },
+  });
+  const notesTagCounts = getTagCountsFromItems(
+    allNoteRowsForTags.map((r) => ({ tags: JSON.parse(r.tags) as string[] }))
+  );
+  const broadcastTagCounts = getTagCountsFromItems(
+    allBroadcastRowsForTags.map((r) => ({ tags: JSON.parse(r.tags) as string[] }))
+  );
+  const siteTagCounts = mergeTagCounts(notesTagCounts, broadcastTagCounts);
 
     const recentBroadcasts = rows.map((item) => ({
     id: String(item.id),
@@ -279,21 +297,14 @@ export default async function HomePage() {
               <p className="mt-4 text-sm leading-7 text-stone-600">{bio}</p>
             </section>
 
-            <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
+                        <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
               <div className="border-b border-stone-200 pb-3">
                 <h2 className="text-base font-semibold tracking-tight text-stone-800">
                   标签
                 </h2>
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center rounded-sm border border-stone-200 bg-stone-50 px-3 py-1 text-sm text-stone-600"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div className="mt-4">
+                <TagList tags={siteTagCounts} basePath="/notes" />
               </div>
             </section>
 
