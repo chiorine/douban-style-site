@@ -227,3 +227,68 @@ home-hero.json 已纳入 Git 管理（当前阶段作为数据源）
 - 清晰看到当前筛选状态与空结果提示
 
 这一步让网站从“静态页面”更进一步接近一个完整的个人博客系统。
+
+---
+
+## 更新记录
+
+### 2026-03-25 · 重构首页“最近项目”模块
+
+### 3. 项目后台管理（Admin）
+
+新增完整项目管理能力：
+
+- 项目列表：`/admin/projects`
+- 新建项目：`/admin/projects/new`
+- 编辑项目：`/admin/projects/[slug]/edit`
+
+支持：
+
+- 基础信息编辑（title / description / tech / tags）
+- 状态管理（进行中 / 已完成 / 已搁置）
+- featured 控制（首页展示）
+- 开发记录（logs）动态增删改
+- 删除项目（带确认）
+
+---
+
+## 🗂 数据结构设计
+
+项目数据已从代码中拆出，改为内容驱动：
+
+content/projects/
+├── wewkee-site.json
+├── yt-download-system.json
+└── photo-organizer.json
+
+
+每个项目一个 JSON 文件，例如：
+
+```json
+{
+  "slug": "wewkee-site",
+  "title": "个人网站（Wewkee）",
+  "status": "ongoing",
+  "tech": ["Next.js", "VPS"],
+  "logs": [
+    {
+      "date": "2026-03-24",
+      "content": "重构首页最近项目模块"
+    }
+  ]
+}
+
+🔁 数据读写架构
+
+content/projects/*.json     ← 数据源
+        ↓
+src/lib/projects.ts        ← 统一读写层（CRUD）
+        ↓
+前台页面（/projects）
+后台 admin（编辑）
+
+特点：
+
+单一数据源
+前台 / 后台共用
+修改后即时生效（revalidate）
