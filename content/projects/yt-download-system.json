@@ -1,0 +1,41 @@
+{
+  "slug": "yt-download-system",
+  "title": "YouTube 自动下载系统",
+  "description": "用 yt-dlp + VPS + Tailscale + SMB 搭的一套自动下载与本地同步方案，订阅频道自动入库。",
+  "content": "起因是不想靠第三方服务保存想看的视频，于是用 yt-dlp 写了一个定时任务，跑在 VPS 上。下载完成后通过 SMB 共享到本地 NAS，再用 Tailscale 组网实现外网也能访问。目前已经稳定跑了一段时间，基本不需要手动维护。",
+  "status": "ongoing",
+  "tags": [
+    "自动化",
+    "媒体库",
+    "工具"
+  ],
+  "tech": [
+    "yt-dlp",
+    "Python",
+    "VPS",
+    "Tailscale",
+    "SMB"
+  ],
+  "createdAt": "2024-11",
+  "updatedAt": "2025-02",
+  "featured": true,
+  "links": {},
+  "logs": [
+    {
+      "date": "2025-3-6",
+      "content": "SMB 挂载稳定后，把定时任务改为每天凌晨自动跑，基本不用手动维护。"
+    },
+    {
+      "date": "2025-3-5",
+      "content": "yt-dlp 脚本初版完成，支持按频道订阅批量下载，格式统一输出为 mp4。"
+    },
+    {
+      "date": "2025-3-10",
+      "content": "加入 Tailscale 组网，现在外网也能访问本地 NAS 上的视频库了。"
+    },
+    {
+      "date": "2025-3-1",
+      "content": "开始折腾这个项目，起因是第三方收藏夹突然挂了，决定自己存。"
+    }
+  ]
+}

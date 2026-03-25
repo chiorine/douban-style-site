@@ -1,0 +1,41 @@
+﻿{
+  "slug": "wewkee-site",
+  "title": "个人网站（Wewkee）",
+  "description": "基于 Next.js + Tailwind 搭建的个人内容站，部署在 VPS 上，支持广播、日记与项目模块。",
+  "content": "这个站从零开始搭，想做一个安静、自己说了算的角落。数据库用 PostgreSQL + Prisma，内容通过后台管理，部署在自己的 VPS 上。广播模块类似微博式的即时记录，日记模块放稍长的文字，项目模块就是现在这个。整体风格参考了一些独立博客，不追求完成，只是慢慢把想要的功能一点点加进去。",
+  "status": "ongoing",
+  "tags": ["独立网站", "个人项目", "前端"],
+  "tech": ["Next.js", "TypeScript", "Tailwind", "Prisma", "PostgreSQL"],
+  "createdAt": "2025-01",
+  "updatedAt": "2025-03",
+  "featured": true,
+  "links": {
+    "github": "https://github.com/"
+  },
+  "logs": [
+    {
+      "date": "2026-03-24",
+      "content": "重构首页「最近项目」模块，改为数据驱动，并接入 /projects 页面联动。"
+    },
+    {
+      "date": "2026-03-22",
+      "content": "完成 VPS 部署，打通 GitHub 推送后自动拉取更新的流程。"
+    },
+    {
+      "date": "2026-03-18",
+      "content": "新增项目模块：数据结构、列表页、详情页一并上线。"
+    },
+    {
+      "date": "2026-03-10",
+      "content": "日记详情页加入上一篇 / 下一篇导航，顺手整理了一遍面包屑样式。"
+    },
+    {
+      "date": "2026-02-28",
+      "content": "广播后台完成，支持草稿与发布两种状态，前台同步过滤未发布内容。"
+    },
+    {
+      "date": "2025-01-15",
+      "content": "项目初始化，搭建 Next.js + Tailwind 基础结构，数据库选型 PostgreSQL + Prisma。"
+    }
+  ]
+}

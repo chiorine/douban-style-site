@@ -43,11 +43,17 @@ export default async function AdminLayout({
             >
               日记管理
             </Link>
-            <Link
+                        <Link
               href="/admin/home-hero"
               className="text-sm text-stone-500 transition hover:text-emerald-700"
             >
               首页模块
+            </Link>
+            <Link
+              href="/admin/projects"
+              className="text-sm text-stone-500 transition hover:text-emerald-700"
+            >
+              项目管理
             </Link>
           </div>
 

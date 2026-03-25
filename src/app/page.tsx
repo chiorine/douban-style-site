@@ -1,4 +1,5 @@
-import { projects } from "@/data/projects";
+import { getAllProjects } from "@/lib/projects";
+import ProjectCard from "@/components/projects/ProjectCard";
 import Image from "next/image";
 import Link from "next/link";
 import { archives } from "@/data/archive";
@@ -17,8 +18,9 @@ import { getHomeHero } from "@/lib/home-hero";
 
 export default async function HomePage() {
   // 从 JSON 文件读取首页 Hero 配置（出错时自动降级到默认值）
-  const homeHero = getHomeHero();
-    const rows = await prisma.broadcast.findMany({
+    const homeHero = getHomeHero();
+  const allProjects = await getAllProjects();
+  const rows = await prisma.broadcast.findMany({
     where: { status: "published" },
     orderBy: { createdAt: "desc" },
     take: 3,
@@ -230,39 +232,28 @@ export default async function HomePage() {
               </div>
             </section>
 
-            <section className="rounded-md border border-stone-200 bg-white px-6 py-6">
-              <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+                        <section className="rounded-md border border-stone-200 bg-white">
+              <div className="flex items-center justify-between border-b border-stone-200 px-6 py-4">
                 <h2 className="text-base font-semibold tracking-tight text-stone-800">
                   最近项目
                 </h2>
+                <Link
+                  href="/projects"
+                  className="text-sm text-emerald-700 hover:text-emerald-800"
+                >
+                  更多项目
+                </Link>
               </div>
 
-              <div className="mt-4 space-y-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="space-y-2">
-                    <h3 className="text-base font-medium text-stone-800">
-                      {project.title}
-                      <span className="ml-2 text-xs text-stone-400">
-                        · {project.status}
-                      </span>
-                    </h3>
-
-                    <p className="text-sm leading-7 text-stone-600">
-                      {project.summary}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="inline-flex items-center rounded-sm border border-stone-200 bg-stone-50 px-2.5 py-0.5 text-xs text-stone-500"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
+              <div className="divide-y divide-stone-200">
+                                {allProjects
+                  .filter((p) => p.featured)
+                  .slice(0, 3)
+                  .map((project) => (
+                    <div key={project.slug} className="px-6 py-5">
+                      <ProjectCard project={project} variant="compact" />
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </section>
           </section>
