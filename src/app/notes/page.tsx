@@ -6,17 +6,16 @@ import NotesFilter from "@/components/notes/NotesFilter";
 import TagList from "@/components/common/TagList";
 import { prisma } from "@/lib/prisma";
 import { getTagCountsFromItems } from "@/lib/tags";
-import { buildArchives, monthToLabel } from "@/lib/archives";
 import type { NoteForPage } from "@/types/note";
 
-type SearchParams = { tag?: string; month?: string };
+type SearchParams = { tag?: string };
 
 export default async function NotesPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const { tag, month } = await searchParams;
+  const { tag } = await searchParams;
 
   // 只读取已发布的日记，按 createdAt 倒序
   const rows = await prisma.note.findMany({
@@ -31,23 +30,16 @@ export default async function NotesPage({
     content: JSON.parse(row.content) as string[],
   }));
 
-  // 依次应用 tag / month 筛选
-  let filteredNotes = allNotes;
-  if (tag) {
-    filteredNotes = filteredNotes.filter((n) => n.tags.includes(tag));
-  }
-  if (month) {
-    filteredNotes = filteredNotes.filter((n) => n.date.startsWith(month));
-  }
-
-  // 归档统计：始终基于全部已发布日记
-  const archives = buildArchives(allNotes);
+    // tag 筛选
+  const filteredNotes = tag
+    ? allNotes.filter((n) => n.tags.includes(tag))
+    : allNotes;
 
   // 边栏标签统计：始终基于全部已发布日记
   const notesTagCounts = getTagCountsFromItems(allNotes);
 
-  // 有筛选条件时，是否显示空状态
-  const hasFilter = !!tag || !!month;
+    // 有筛选条件时，是否显示空状态
+  const hasFilter = !!tag;
   const isEmpty = hasFilter && filteredNotes.length === 0;
 
   return (
@@ -67,21 +59,13 @@ export default async function NotesPage({
               </p>
             </section>
 
-            {/* 筛选状态条：tag 或 month */}
+                                    {/* 筛选状态条：tag */}
             {hasFilter && (
               <div className="flex flex-wrap items-center gap-3 rounded-md border border-stone-200 bg-white px-5 py-3 text-sm text-stone-600">
-                {tag && (
-                  <span>
-                    当前标签：
-                    <span className="ml-1 font-medium text-stone-800">#{tag}</span>
-                  </span>
-                )}
-                {month && (
-                  <span>
-                    当前筛选：
-                    <span className="ml-1 font-medium text-stone-800">{monthToLabel(month)}</span>
-                  </span>
-                )}
+                <span>
+                  当前筛选：标签 /
+                  <span className="ml-1 font-medium text-stone-800">{tag}</span>
+                </span>
                 <Link
                   href="/notes"
                   className="ml-auto text-xs text-stone-400 transition hover:text-emerald-700"
@@ -91,18 +75,11 @@ export default async function NotesPage({
               </div>
             )}
 
-            {isEmpty ? (
+                                    {isEmpty ? (
               <div className="rounded-md border border-stone-200 bg-white px-6 py-10 text-center">
-                {month && !tag && (
-                  <p className="text-sm text-stone-500">
-                    这个月份还没有已发布的日记。
-                  </p>
-                )}
-                {tag && (
-                  <p className="text-sm text-stone-500">
-                    没有找到符合条件的日记。
-                  </p>
-                )}
+                <p className="text-sm text-stone-500">
+                  当前标签下还没有已发布的日记。
+                </p>
                 <p className="mt-2 text-sm text-stone-400">
                   <Link href="/notes" className="text-emerald-700 hover:underline">
                     清除当前筛选
@@ -115,35 +92,12 @@ export default async function NotesPage({
           </section>
 
                               <aside className="space-y-6">
-            <SidebarCard title="标签">
+                        <SidebarCard title="标签">
               <TagList
                 tags={notesTagCounts}
                 basePath="/notes"
                 activeTag={tag}
               />
-            </SidebarCard>
-
-            <SidebarCard title="归档">
-              {archives.length === 0 ? (
-                <p className="text-sm text-stone-400">暂无归档记录。</p>
-              ) : (
-                <ul className="space-y-3 text-sm text-stone-600">
-                  {archives.map((item) => (
-                    <li key={item.month} className="flex items-center justify-between">
-                      <Link
-                        href={`/notes?month=${item.month}`}
-                        className={[
-                          "transition hover:text-emerald-700",
-                          month === item.month ? "font-medium text-emerald-700" : "",
-                        ].join(" ")}
-                      >
-                        {item.label}
-                      </Link>
-                      <span className="text-stone-400">{item.count}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
             </SidebarCard>
 
             <SidebarCard title="关于这个页面">
@@ -154,9 +108,9 @@ export default async function NotesPage({
               </p>
             </SidebarCard>
 
-            <SidebarCard title="浏览方式">
+                        <SidebarCard title="浏览方式">
               <ul className="space-y-3 text-sm leading-7 text-stone-600">
-                <li>可以先按月份归档筛选，再按标签缩小范围。</li>
+                <li>可以按标签筛选，缩小浏览范围。</li>
                 <li>点进标题后可以查看全文。</li>
                 <li>文章详情页底部支持上一篇 / 下一篇跳转。</li>
               </ul>

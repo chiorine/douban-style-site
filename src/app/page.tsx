@@ -10,10 +10,9 @@ import {
   location,
   website,
 } from "@/data/site";
-import { getTagCountsFromItems, mergeTagCounts } from "@/lib/tags";
-import TagList from "@/components/common/TagList";
+import { getTagCountsFromItems } from "@/lib/tags";
 import { getHomeHero } from "@/lib/home-hero";
-import { buildArchives } from "@/lib/archives";
+
 
 export default async function HomePage() {
   // 从 JSON 文件读取首页 Hero 配置（出错时自动降级到默认值）
@@ -40,35 +39,33 @@ export default async function HomePage() {
     tags: JSON.parse(row.tags) as string[],
   }));
 
-    // 归档统计：只统计已发布日记，按 date 字段分组
-  const allNoteRowsForArchive = await prisma.note.findMany({
-    where: { status: "published" },
-    select: { date: true },
-  });
-  const archives = buildArchives(allNoteRowsForArchive);
-
   // 外部链接：从数据库读取，只取已发布，按 sortOrder asc
   const externalLinks = await prisma.externalLink.findMany({
     where: { status: "published" },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
   });
 
-  // 全站标签统计：notes + broadcasts 合并
-  const allNoteRowsForTags = await prisma.note.findMany({
-    where: { status: "published" },
-    select: { tags: true },
-  });
+    // 广播标签统计：仅已发布广播，count>=2，最多8个
   const allBroadcastRowsForTags = await prisma.broadcast.findMany({
     where: { status: "published" },
     select: { tags: true },
   });
-  const notesTagCounts = getTagCountsFromItems(
-    allNoteRowsForTags.map((r) => ({ tags: JSON.parse(r.tags) as string[] }))
-  );
   const broadcastTagCounts = getTagCountsFromItems(
     allBroadcastRowsForTags.map((r) => ({ tags: JSON.parse(r.tags) as string[] }))
-  );
-  const siteTagCounts = mergeTagCounts(notesTagCounts, broadcastTagCounts);
+  )
+    .filter((t) => t.count >= 2)
+    .slice(0, 8);
+
+  // 日记标签统计：仅已发布日记，count>=2，最多8个
+  const allNoteRowsForTags = await prisma.note.findMany({
+    where: { status: "published" },
+    select: { tags: true },
+  });
+  const noteTagCounts = getTagCountsFromItems(
+    allNoteRowsForTags.map((r) => ({ tags: JSON.parse(r.tags) as string[] }))
+  )
+    .filter((t) => t.count >= 2)
+    .slice(0, 8);
 
     const recentBroadcasts = rows.map((item) => ({
     id: String(item.id),
@@ -300,43 +297,76 @@ export default async function HomePage() {
               <p className="mt-4 text-sm leading-7 text-stone-600">{bio}</p>
             </section>
 
-                        <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
+            <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
               <div className="border-b border-stone-200 pb-3">
                 <h2 className="text-base font-semibold tracking-tight text-stone-800">
-                  标签
+                  广播标签
                 </h2>
               </div>
-              <div className="mt-4">
-                <TagList tags={siteTagCounts} basePath="/notes" />
-              </div>
-            </section>
-
-                        <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
-              <div className="border-b border-stone-200 pb-3">
-                <h2 className="text-base font-semibold tracking-tight text-stone-800">
-                  归档
-                </h2>
-              </div>
-              {archives.length === 0 ? (
-                <p className="mt-4 text-sm text-stone-400">暂无归档记录。</p>
+              {broadcastTagCounts.length === 0 ? (
+                <p className="mt-4 text-sm text-stone-400">暂无标签。</p>
               ) : (
                 <ul className="mt-4 space-y-3 text-sm text-stone-600">
-                  {archives.map((item) => (
+                  {broadcastTagCounts.map((item) => (
                     <li
-                      key={item.month}
+                      key={item.name}
                       className="flex items-center justify-between"
                     >
                       <Link
-                        href={`/notes?month=${item.month}`}
+                        href={`/broadcast?tag=${encodeURIComponent(item.name)}`}
                         className="transition hover:text-emerald-700"
                       >
-                        {item.label}
+                        {item.name}
                       </Link>
                       <span className="text-stone-400">{item.count}</span>
                     </li>
                   ))}
                 </ul>
               )}
+              <div className="mt-4 border-t border-stone-100 pt-3">
+                <Link
+                  href="/broadcast"
+                  className="text-sm text-emerald-700 hover:text-emerald-800"
+                >
+                  更多广播标签 →
+                </Link>
+              </div>
+            </section>
+
+            <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
+              <div className="border-b border-stone-200 pb-3">
+                <h2 className="text-base font-semibold tracking-tight text-stone-800">
+                  日记标签
+                </h2>
+              </div>
+              {noteTagCounts.length === 0 ? (
+                <p className="mt-4 text-sm text-stone-400">暂无标签。</p>
+              ) : (
+                <ul className="mt-4 space-y-3 text-sm text-stone-600">
+                  {noteTagCounts.map((item) => (
+                    <li
+                      key={item.name}
+                      className="flex items-center justify-between"
+                    >
+                      <Link
+                        href={`/notes?tag=${encodeURIComponent(item.name)}`}
+                        className="transition hover:text-emerald-700"
+                      >
+                        {item.name}
+                      </Link>
+                      <span className="text-stone-400">{item.count}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="mt-4 border-t border-stone-100 pt-3">
+                <Link
+                  href="/notes"
+                  className="text-sm text-emerald-700 hover:text-emerald-800"
+                >
+                  更多日记标签 →
+                </Link>
+              </div>
             </section>
 
                         <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
