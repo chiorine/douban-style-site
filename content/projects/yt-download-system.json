@@ -1,41 +1,42 @@
 {
   "slug": "yt-download-system",
   "title": "YouTube 自动下载系统",
-  "description": "用 yt-dlp + VPS + Tailscale + SMB 搭的一套自动下载与本地同步方案，订阅频道自动入库。",
-  "content": "起因是不想靠第三方服务保存想看的视频，于是用 yt-dlp 写了一个定时任务，跑在 VPS 上。下载完成后通过 SMB 共享到本地 NAS，再用 Tailscale 组网实现外网也能访问。目前已经稳定跑了一段时间，基本不需要手动维护。",
-  "status": "ongoing",
+  "description": "本项目是一个基于 VPS + 自动化脚本 构建的个人影音管理系统，核心目标是实现：\r\n自动从 YouTube 播放列表下载视频（基于 yt-dlp）\r\n自动同步到本地 Windows 设备（通过 rsync + SMB + Tailscale）\r\n控制 VPS 存储占用（自动清理旧视频，维持固定容量/数量）\r\n在本地构建完整影音库，配合 Infuse 实现秒加载观看\r\n整体架构采用「VPS 负责下载 + 本地负责存储与播放」的分离模式，在节省带宽的同时提升播放体验。",
+  "content": "核心功能\r\n🎬 播放列表自动下载（支持多个列表）\r\n🔁 定时任务自动执行（cron）\r\n📦 自动同步至本地存储（Windows + 外接硬盘）\r\n🧹 自动清理旧视频（按容量 / 数量限制）\r\n📡 内网打通（Tailscale 直连）",
+  "status": "done",
   "tags": [
     "自动化",
     "媒体库",
     "工具"
   ],
   "tech": [
-    "yt-dlp",
-    "Python",
-    "VPS",
-    "Tailscale",
-    "SMB"
+    "VPS：Ubuntu 24",
+    "下载工具：yt-dlp",
+    "同步工具：rsync",
+    "网络：Tailscale",
+    "存储：Windows SMB 共享 + 外接硬盘",
+    "播放端：Infuse（iOS / Apple TV）"
   ],
-  "createdAt": "2024-11",
-  "updatedAt": "2025-02",
+  "createdAt": "2026-03-07",
+  "updatedAt": "2026-03-10",
   "featured": true,
   "links": {},
   "logs": [
     {
-      "date": "2025-3-6",
-      "content": "SMB 挂载稳定后，把定时任务改为每天凌晨自动跑，基本不用手动维护。"
+      "date": "2025-3-9",
+      "content": "✅ 支持多个播放列表自动下载\r\n✅ 每个播放列表限制最大视频数量（如 5 个）\r\n✅ 完成自动化流程闭环（下载 → 同步 → 清理）"
     },
     {
-      "date": "2025-3-5",
-      "content": "yt-dlp 脚本初版完成，支持按频道订阅批量下载，格式统一输出为 mp4。"
+      "date": "2025-3-8",
+      "content": "✅ 实现“只保留最近视频”策略（滚动删除旧视频）\r\n✅ 优化同步逻辑（避免重复传输）\r\n✅ 确认无新视频时脚本稳定运行"
+    },
+    {
+      "date": "2025-3-7",
+      "content": "✅ 搭建 VPS 基础环境（Ubuntu）\r\n✅ 安装 yt-dlp，实现播放列表下载\r\n✅ 配置 rsync + SMB，实现 VPS → Windows 同步\r\n✅ 接入 Tailscale，实现内网穿透访问\r\n✅ 编写 sync.sh 自动同步脚本\r\n✅ 编写 clean.sh 自动清理脚本（限制 ~8GB）"
     },
     {
       "date": "2025-3-10",
-      "content": "加入 Tailscale 组网，现在外网也能访问本地 NAS 上的视频库了。"
-    },
-    {
-      "date": "2025-3-1",
-      "content": "开始折腾这个项目，起因是第三方收藏夹突然挂了，决定自己存。"
+      "content": "✅ 打通 Infuse 播放链路（iPhone / Apple TV）\r\n✅ 实现本地秒加载观看体验\r\n✅ 对比 VPS 带宽 vs 直接在线播放，验证方案可行性"
     }
   ]
 }

@@ -27,7 +27,7 @@ export const navigation = [
   { name: "广播", href: "/broadcast" },
   { name: "日记", href: "/notes" },
   { name: "项目", href: "/projects" },
-  { name: "关于", href: "#" },
+  { name: "关于", href: "/about" },
 ];
 
 // ────────────────────────────────────────────────────────────

@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Broadcast: 'Broadcast',
+  ExternalLink: 'ExternalLink',
   Note: 'Note'
 } as const
 
@@ -81,6 +82,20 @@ export const BroadcastScalarFieldEnum = {
 } as const
 
 export type BroadcastScalarFieldEnum = (typeof BroadcastScalarFieldEnum)[keyof typeof BroadcastScalarFieldEnum]
+
+
+export const ExternalLinkScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  url: 'url',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExternalLinkScalarFieldEnum = (typeof ExternalLinkScalarFieldEnum)[keyof typeof ExternalLinkScalarFieldEnum]
 
 
 export const NoteScalarFieldEnum = {

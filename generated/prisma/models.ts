@@ -9,5 +9,6 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Broadcast'
+export type * from './models/ExternalLink'
 export type * from './models/Note'
 export type * from './commonInputTypes'

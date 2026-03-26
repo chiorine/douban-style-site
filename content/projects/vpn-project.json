@@ -1,0 +1,24 @@
+{
+  "slug": "vpn-project",
+  "title": "vpn搭建",
+  "description": "用 2分钟 搭建一个科学上网的VPN节点",
+  "status": "done",
+  "tags": [
+    "vpn"
+  ],
+  "tech": [
+    "shell"
+  ],
+  "createdAt": "2026-03",
+  "updatedAt": "2026-03",
+  "featured": true,
+  "links": {
+    "demo": "https://youtu.be/993MDk7IvjM"
+  },
+  "logs": [
+    {
+      "date": "2026-03-6",
+      "content": "脚本\r\nbash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh)"
+    }
+  ]
+}

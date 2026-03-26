@@ -43,12 +43,21 @@ export default function AdminPage() {
                 <span className="text-stone-400">编辑 →</span>
               </Link>
             </li>
-            <li>
+                        <li>
               <Link
                 href="/admin/projects"
                 className="flex items-center justify-between rounded-sm border border-stone-200 bg-stone-50 px-4 py-3 text-sm transition hover:border-emerald-300 hover:bg-emerald-50"
               >
                 <span className="font-medium text-stone-700">项目管理</span>
+                <span className="text-stone-400">查看 →</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin/links"
+                className="flex items-center justify-between rounded-sm border border-stone-200 bg-stone-50 px-4 py-3 text-sm transition hover:border-emerald-300 hover:bg-emerald-50"
+              >
+                <span className="font-medium text-stone-700">外部链接管理</span>
                 <span className="text-stone-400">查看 →</span>
               </Link>
             </li>

@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Broadcast = Prisma.BroadcastModel
 /**
+ * Model ExternalLink
+ * 
+ */
+export type ExternalLink = Prisma.ExternalLinkModel
+/**
  * Model Note
  * 
  */

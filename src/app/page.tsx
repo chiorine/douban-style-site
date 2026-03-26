@@ -2,7 +2,6 @@ import { getAllProjects } from "@/lib/projects";
 import ProjectCard from "@/components/projects/ProjectCard";
 import Image from "next/image";
 import Link from "next/link";
-import { archives } from "@/data/archive";
 import { prisma } from "@/lib/prisma";
 import {
   nickname,
@@ -10,11 +9,11 @@ import {
   bio,
   location,
   website,
-  links,
 } from "@/data/site";
 import { getTagCountsFromItems, mergeTagCounts } from "@/lib/tags";
 import TagList from "@/components/common/TagList";
 import { getHomeHero } from "@/lib/home-hero";
+import { buildArchives } from "@/lib/archives";
 
 export default async function HomePage() {
   // 从 JSON 文件读取首页 Hero 配置（出错时自动降级到默认值）
@@ -40,6 +39,19 @@ export default async function HomePage() {
     readingTime: row.readingTime,
     tags: JSON.parse(row.tags) as string[],
   }));
+
+    // 归档统计：只统计已发布日记，按 date 字段分组
+  const allNoteRowsForArchive = await prisma.note.findMany({
+    where: { status: "published" },
+    select: { date: true },
+  });
+  const archives = buildArchives(allNoteRowsForArchive);
+
+  // 外部链接：从数据库读取，只取已发布，按 sortOrder asc
+  const externalLinks = await prisma.externalLink.findMany({
+    where: { status: "published" },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+  });
 
   // 全站标签统计：notes + broadcasts 合并
   const allNoteRowsForTags = await prisma.note.findMany({
@@ -299,50 +311,58 @@ export default async function HomePage() {
               </div>
             </section>
 
-            <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
+                        <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
               <div className="border-b border-stone-200 pb-3">
                 <h2 className="text-base font-semibold tracking-tight text-stone-800">
                   归档
                 </h2>
               </div>
-              <ul className="mt-4 space-y-3 text-sm text-stone-600">
-                {archives.map((item) => (
-                  <li
-                    key={`${item.year}-${item.month}`}
-                    className="flex items-center justify-between"
-                  >
-                    <Link
-                      href={`/broadcast?month=${item.year}-${String(item.month).padStart(2, "0")}`}
-                      className="transition hover:text-emerald-700"
+              {archives.length === 0 ? (
+                <p className="mt-4 text-sm text-stone-400">暂无归档记录。</p>
+              ) : (
+                <ul className="mt-4 space-y-3 text-sm text-stone-600">
+                  {archives.map((item) => (
+                    <li
+                      key={item.month}
+                      className="flex items-center justify-between"
                     >
-                      {item.year} 年 {String(item.month).padStart(2, "0")} 月
-                    </Link>
-                    <span className="text-stone-400">{item.count}</span>
-                  </li>
-                ))}
-              </ul>
+                      <Link
+                        href={`/notes?month=${item.month}`}
+                        className="transition hover:text-emerald-700"
+                      >
+                        {item.label}
+                      </Link>
+                      <span className="text-stone-400">{item.count}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
 
-            <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
+                        <section className="rounded-md border border-stone-200 bg-white px-5 py-5">
               <div className="border-b border-stone-200 pb-3">
                 <h2 className="text-base font-semibold tracking-tight text-stone-800">
                   外部链接
                 </h2>
               </div>
-              <ul className="mt-4 space-y-3 text-sm text-stone-600">
-                {links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center transition hover:text-emerald-700"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              {externalLinks.length === 0 ? (
+                <p className="mt-4 text-sm text-stone-400">暂无外部链接。</p>
+              ) : (
+                <ul className="mt-4 space-y-3 text-sm text-stone-600">
+                  {externalLinks.map((link) => (
+                    <li key={link.id}>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="inline-flex items-center transition hover:text-emerald-700"
+                      >
+                        {link.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           </aside>
         </div>

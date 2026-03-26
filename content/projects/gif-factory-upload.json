@@ -1,0 +1,63 @@
+{
+  "slug": "gif-factory-upload",
+  "title": "GIF Factory Upload",
+  "description": "基于 VPS 的自动化 GIF 生成系统，实现视频转 GIF、自动处理与远程回传的一体化流程。",
+  "content": "本项目用于将上传的视频素材自动转换为 GIF 表情包，核心功能包括：\r\n\r\n自动监听 inbox 目录，检测新视频文件\r\n使用 ffmpeg 按预设参数生成 GIF（小体积/标准/高清）\r\n自动输出到本地并同步至 Windows 共享目录\r\n支持 Tailscale 内网访问与远程使用\r\n可扩展 Web UI 进行可视化操作\r\n\r\n适用于表情包制作、内容二次创作等场景。",
+  "status": "done",
+  "tags": [
+    "Automation",
+    "GIF",
+    "ffmpeg",
+    "VPS",
+    "Linux",
+    "Python",
+    "Shell",
+    "SMB",
+    "Tailscale",
+    "Flask",
+    "Media Processing"
+  ],
+  "tech": [
+    "Python 3",
+    "ffmpeg",
+    "rsync",
+    "Tailscale",
+    "Flask"
+  ],
+  "createdAt": "2026-03",
+  "updatedAt": "2026-03",
+  "featured": true,
+  "links": {
+    "demo": "http://100.88.172.12:8088/"
+  },
+  "logs": [
+    {
+      "date": "2026-03-16",
+      "content": "初步接入 Web UI（Flask），支持远程访问与基础操作"
+    },
+    {
+      "date": "2026-03-15",
+      "content": "部署 systemd 服务，实现开机自启动与稳定运行"
+    },
+    {
+      "date": "2026-03-14",
+      "content": "优化 GIF 参数（体积控制至 ~2MB），完善日志系统"
+    },
+    {
+      "date": "2026-03-13",
+      "content": "接入 SMB 共享目录，实现 GIF 自动回传 Windows"
+    },
+    {
+      "date": "2026-03-12",
+      "content": "开发 watcher 自动监听脚本，实现 inbox → GIF 自动处理"
+    },
+    {
+      "date": "2026-03-11",
+      "content": "集成 ffmpeg，实现基础视频转 GIF 功能"
+    },
+    {
+      "date": "2026-03-10",
+      "content": "初始化项目结构，完成 VPS 环境搭建"
+    }
+  ]
+}

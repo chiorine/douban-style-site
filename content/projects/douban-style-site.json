@@ -1,0 +1,55 @@
+{
+  "slug": "douban-style-site",
+  "title": "个人Blog网站",
+  "description": "这是一个基于 Next.js 构建的个人网站项目，定位为轻量化内容发布 + 自我记录平台。\r\n主要用于发布广播（日常碎片）、日记（长文记录）以及项目开发日志，同时支持后台管理与快速部署。",
+  "content": "项目核心目标：\r\n\r\n构建一个无数据库、纯静态数据驱动的个人网站\r\n实现可控的内容管理（Admin 后台）\r\n支持标签 / 归档 / 筛选等内容组织能力\r\n实现 VPS 一键部署 + GitHub 同步更新\r\n保持整体架构：简单、可维护、低成本运行\r\n\r\n当前功能模块：\r\n\r\n首页内容聚合（广播 / 日记）\r\n广播系统（短内容）\r\n日记系统（长内容 + 上下篇导航）\r\n标签系统（统计 + 筛选）\r\nAdmin 登录鉴权（Cookie + HMAC）\r\nGitHub + VPS 自动同步部署",
+  "status": "ongoing",
+  "tags": [
+    "独立网站",
+    "VPS 部署",
+    "GitHub 同步",
+    "轻量化设计",
+    "内容管理系统（CMS）",
+    "登录鉴权（Cookie + HMAC）"
+  ],
+  "tech": [
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Node.js",
+    "VPS（Ubuntu）"
+  ],
+  "createdAt": "2026-03-18",
+  "updatedAt": "2026-03-25",
+  "featured": true,
+  "links": {
+    "github": "https://github.com/chiorine/douban-style-site",
+    "demo": "http://104.194.81.52:3000/"
+  },
+  "logs": [
+    {
+      "date": "2026-03-25",
+      "content": "完成 GitHub 仓库初始化与同步流程\r\nVPS 部署上线（生产环境）\r\n修复 Admin 重复登录问题（cookie / secret 同步）\r\n优化 README 与项目结构说明"
+    },
+    {
+      "date": "2026-03-24",
+      "content": "实现标签系统：\r\n标签统计\r\n多数据源合并\r\n标签筛选功能\r\n新增 tags.ts 工具库"
+    },
+    {
+      "date": "2026-03-23",
+      "content": "修复日记详情页 slug 问题\r\n优化路由稳定性"
+    },
+    {
+      "date": "2026-03-21",
+      "content": "首页结构重构（模块化组件拆分）\r\n引入站点配置中心（site.ts）\r\n实现导航、标题、描述可配置化"
+    },
+    {
+      "date": "2026-03-19",
+      "content": "实现 Admin 登录系统\r\n完成鉴权方案（Cookie + HMAC 签名）\r\n接入 middleware（Edge Runtime 拦截 /admin）"
+    },
+    {
+      "date": "2026-03-18",
+      "content": "项目初始化（Next.js 基础框架搭建）\r\n完成基础页面结构：首页 / 日记页 / 广播页"
+    }
+  ]
+}

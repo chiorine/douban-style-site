@@ -23,6 +23,18 @@ model Broadcast {
   updatedAt   DateTime @updatedAt
 }
 
+// ─── 外部链接（首页侧边栏，后台可管理）─────────────────────
+model ExternalLink {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  description String?
+  sortOrder   Int      @default(0)
+  status      String   @default("published")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 // ─── 笔记（长文，类似博客文章）──────────────────────────────
 model Note {
   id          Int      @id @default(autoincrement())

@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Broadcast: 'Broadcast',
+  ExternalLink: 'ExternalLink',
   Note: 'Note'
 } as const
 
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "broadcast" | "note"
+    modelProps: "broadcast" | "externalLink" | "note"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -476,6 +477,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BroadcastCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BroadcastCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExternalLink: {
+      payload: Prisma.$ExternalLinkPayload<ExtArgs>
+      fields: Prisma.ExternalLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExternalLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExternalLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.ExternalLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExternalLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>
+        }
+        findMany: {
+          args: Prisma.ExternalLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>[]
+        }
+        create: {
+          args: Prisma.ExternalLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>
+        }
+        createMany: {
+          args: Prisma.ExternalLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExternalLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.ExternalLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>
+        }
+        update: {
+          args: Prisma.ExternalLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExternalLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExternalLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExternalLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExternalLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.ExternalLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExternalLink>
+        }
+        groupBy: {
+          args: Prisma.ExternalLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExternalLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalLinkCountAggregateOutputType> | number
         }
       }
     }
@@ -602,6 +677,20 @@ export const BroadcastScalarFieldEnum = {
 } as const
 
 export type BroadcastScalarFieldEnum = (typeof BroadcastScalarFieldEnum)[keyof typeof BroadcastScalarFieldEnum]
+
+
+export const ExternalLinkScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  url: 'url',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExternalLinkScalarFieldEnum = (typeof ExternalLinkScalarFieldEnum)[keyof typeof ExternalLinkScalarFieldEnum]
 
 
 export const NoteScalarFieldEnum = {
@@ -766,6 +855,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   broadcast?: Prisma.BroadcastOmit
+  externalLink?: Prisma.ExternalLinkOmit
   note?: Prisma.NoteOmit
 }
 
