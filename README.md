@@ -254,38 +254,25 @@ home-hero.json 已纳入 Git 管理（当前阶段作为数据源）
 
 ## 🗂 数据结构设计
 
-项目数据已从代码中拆出，改为内容驱动：
+项目数据已从代码中拆出，改为内容驱动。
 
-content/projects/
-├── wewkee-site.json
-├── yt-download-system.json
-└── photo-organizer.json
+### 项目文件结构
 
+- `content/projects/wewkee-site.json`
+- `content/projects/yt-download-system.json`
+- `content/projects/photo-organizer.json`
 
-每个项目一个 JSON 文件，例如：
+每个项目对应一个独立的 JSON 文件，用来存放该项目的基础信息、技术栈、状态和开发记录。
 
-```json
-{
-  "slug": "wewkee-site",
-  "title": "个人网站（Wewkee）",
-  "status": "ongoing",
-  "tech": ["Next.js", "VPS"],
-  "logs": [
-    {
-      "date": "2026-03-24",
-      "content": "重构首页最近项目模块"
-    }
-  ]
-}
+### 数据读写方式
 
-🔁 数据读写架构
+项目数据统一存放在 `content/projects/` 目录下。  
+读取与写入逻辑由 `src/lib/projects.ts` 负责统一处理，供前台页面和后台管理共用。
 
-content/projects/*.json     ← 数据源
-        ↓
-src/lib/projects.ts        ← 统一读写层（CRUD）
-        ↓
-前台页面（/projects）
-后台 admin（编辑）
+### 使用位置
+
+- 前台页面：`/projects`
+- 后台管理：admin 编辑页
 
 ---
 
@@ -328,8 +315,5 @@ src/lib/projects.ts        ← 统一读写层（CRUD）
 - 首页标签、日记列表、广播列表均统一基于已发布内容读取
 - 标签点击后可直接进入对应列表页进行筛选浏览
 - 进一步减少首页展示逻辑与列表页数据不一致的问题
-特点：
 
-单一数据源
-前台 / 后台共用
-修改后即时生效（revalidate）
+---
