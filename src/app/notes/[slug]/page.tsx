@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import { prisma } from "@/lib/prisma";
 import type { NoteForPage } from "@/types/note";
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -86,9 +87,20 @@ export default async function NoteDetailPage({
               </header>
 
               <div className="mt-6 space-y-5 text-[15px] leading-8 text-stone-700">
-                {note.content.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="leading-8">{children}</p>,
+                    img: ({ alt, src }) => (
+                      <img
+                        alt={alt ?? ""}
+                        src={src ?? ""}
+                        className="h-auto max-w-full rounded-md"
+                      />
+                    ),
+                  }}
+                >
+                  {note.content.join("\n\n")}
+                </ReactMarkdown>
               </div>
             </article>
 

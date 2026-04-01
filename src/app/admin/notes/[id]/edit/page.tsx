@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import NoteImageUploader from "../../NoteImageUploader";
 import { updateNote } from "../../actions";
 
 const inputCls =
@@ -77,6 +78,7 @@ export default async function EditNotePage({
                 defaultValue={row.slug}
                 className={inputCls}
               />
+              <NoteImageUploader textareaId="content" />
               <p className="text-xs text-stone-400">
                 修改 slug 会导致旧链接失效，请谨慎操作
               </p>

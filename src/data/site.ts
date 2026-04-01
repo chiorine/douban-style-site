@@ -4,7 +4,7 @@
 // ────────────────────────────────────────────────────────────
 
 /** 站点名称，全局统一使用此变量，不要在页面中硬编码 */
-export const siteName = "Wewkee";
+export const siteName = "Wewkee's Blog";
 
 /** 导航栏副标题 / 一句话说明 */
 export const siteSubtitle = "记录广播、日记、项目与生活";

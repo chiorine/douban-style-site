@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createNote } from "../actions";
+import NoteImageUploader from "../NoteImageUploader";
 
 // 通用输入框样式
 const inputCls =
@@ -58,6 +59,7 @@ export default function NewNotePage() {
                 placeholder="my-note-slug"
                 className={inputCls}
               />
+              <NoteImageUploader textareaId="content" />
               <p className="text-xs text-stone-400">
                 URL 标识符，只能含字母、数字、连字符，全站唯一
               </p>
